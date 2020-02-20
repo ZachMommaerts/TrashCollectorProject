@@ -10,16 +10,17 @@ namespace TrashCollector.Models
     public class Account
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public bool IsSuspended { get; set; }
+        public bool IsSuspended { get; set; } = false;
         public string PickupDay { get; set; }
         public DateTime OneTimePickup { get; set; }
-        public DateTime StartDay { get; set; }
-        public DateTime EndDay { get; set; }
-        public Double Balance { get; set; }
+        public DateTime? StartDay { get; set; }
+        public DateTime? EndDay { get; set; }
+        public Double? Balance { get; set; }
 
         [ForeignKey("History")]
-        public int HistoryId { get; set; }
+        public int? HistoryId { get; set; }
         public History History { get; set; }
     }
 }

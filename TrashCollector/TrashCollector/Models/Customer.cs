@@ -11,6 +11,7 @@ namespace TrashCollector.Models
     public class Customer
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -20,7 +21,7 @@ namespace TrashCollector.Models
         public Address Address { get; set; }
 
         [ForeignKey("Account")]
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
         public Account Account { get; set; }
 
         [ForeignKey("IdentityUser")]

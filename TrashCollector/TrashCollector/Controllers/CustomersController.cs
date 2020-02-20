@@ -59,18 +59,16 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Address.StreetAddress,Address.City,Address.State,Address.ZipCode")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,IdentityUserId,Address")] Customer customer, [Bind("Id,StreetAddress,City,State,ZipCode")] Address address)
         {
             if (ModelState.IsValid)
             {
-                History history = new History();
-                _context.Add(history);
-                Account account = new Account();
-                _context.Add(account);
-                Address address = new Address();
                 _context.Add(address);
+                _context.SaveChanges();
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
                 return RedirectToAction(nameof(Index));
             };
             return View(customer);
