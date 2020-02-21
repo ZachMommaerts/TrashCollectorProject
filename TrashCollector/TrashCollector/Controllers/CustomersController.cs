@@ -21,10 +21,12 @@ namespace TrashCollector.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Customer customer)
         {
-            var applicationDbContext = _context.Customers.Include(c => c.Account).Include(c => c.Address).Include(c => c.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            customer.IdentityUserId = userId;
+            var customerInfo = _context.Customers.Where(c => c.IdentityUserId == userId).Include(c => c.Account).Include(c => c.Address).Include(c => c.IdentityUser);
+            return View(await customerInfo.ToListAsync());
         }
 
         // GET: Customers/Details/5
@@ -69,7 +71,7 @@ namespace TrashCollector.Controllers
                 _context.SaveChanges();
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(CreateAccount));
             };
             return View(customer);
         }
@@ -78,16 +80,23 @@ namespace TrashCollector.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> CreateAccount([Bind("Id,PickupDay,StartDay")] Account account)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAccount([Bind("Id,PickupDay,StartDay")] Account account, Customer customer)
         {
             if (ModelState.IsValid)
             {
+                History history = new History();
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
                 _context.Add(account);
+                _context.Add(history);
                 await _context.SaveChangesAsync();
+                customer.AccountId = account.Id;
+                account.HistoryId = history.Id;
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            return View(customer);
         }
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)

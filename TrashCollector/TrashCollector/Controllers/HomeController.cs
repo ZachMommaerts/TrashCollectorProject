@@ -22,11 +22,25 @@ namespace TrashCollector.Controllers
         {
             if (User.IsInRole("Customer"))
             {
-                return RedirectToAction("Create", "Customers");
+                if(User == null)
+                {
+                    return RedirectToAction("Create", "Customers");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Customers");
+                }
             }
             else if (User.IsInRole("Employee"))
             {
-                return RedirectToAction("Create", "Employees");
+                if (User == null)
+                {
+                    return RedirectToAction("Create", "Employees");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Employees");
+                }
             }
             else
             {
