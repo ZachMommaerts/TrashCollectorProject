@@ -13,8 +13,8 @@ namespace TrashCollector.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public bool IsSuspended { get; set; } = false;
-        public string PickupDay { get; set; }
-        public DateTime OneTimePickup { get; set; }
+        public DayOfWeek? PickupDay { get; set; }
+        public DayOfWeek? OneTimePickup { get; set; }
         public DateTime? StartDay { get; set; }
         public DateTime? EndDay { get; set; }
         public Double? Balance { get; set; }

@@ -99,14 +99,11 @@ namespace TrashCollector.Controllers
             return View(customer);
         }
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Account account, Customer customer)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            
 
-            var customer = await _context.Customers.FindAsync(id);
+       
             if (customer == null)
             {
                 return NotFound();
