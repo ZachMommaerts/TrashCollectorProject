@@ -61,41 +61,20 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Customer customer, [Bind("Id,StreetAddress,City,State,ZipCode")] Address address)
+        public async Task<IActionResult> Create(Customer customer, [Bind("Id,StreetAddress,City,State,ZipCode")] Address address, [Bind("Id,PickupDay")] Account account, History history)
         {
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 customer.IdentityUserId = userId;
                 _context.Add(address);
+                _context.Add(account);
+                _context.Add(history);
                 _context.SaveChanges();
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(CreateAccount));
-            };
-            return View(customer);
-        }
-
-        public IActionResult CreateAccount()
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAccount([Bind("Id,PickupDay,StartDay")] Account account, Customer customer)
-        {
-            if (ModelState.IsValid)
-            {
-                History history = new History();
-                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                customer.IdentityUserId = userId;
-                _context.Add(account);
-                _context.Add(history);
-                await _context.SaveChangesAsync();
-                customer.AccountId = account.Id;
-                account.HistoryId = history.Id;
                 return RedirectToAction(nameof(Index));
-            }
+            };
             return View(customer);
         }
         // GET: Customers/Edit/5

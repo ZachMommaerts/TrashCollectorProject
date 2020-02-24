@@ -35,20 +35,22 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayNameFor(model => model.Address.StreetAddress)
+                @Html.DisplayFor(model => item.Address.StreetAddress)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.Account.PickupDay)
+                @Html.DisplayFor(model => item.Account.History.IsPickedUp)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.Account.OneTimePickup)
+                @Html.DisplayFor(model => item.Account.PickupDay)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.Account.Balance)
+                @Html.DisplayFor(model => item.Account.OneTimePickup)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Account.Balance)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
             </td>
         </tr>
 }
