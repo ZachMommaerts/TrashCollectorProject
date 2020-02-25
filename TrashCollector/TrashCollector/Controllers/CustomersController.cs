@@ -98,7 +98,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,AddressId,AccountId,IdentityUserId")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,AddressId,AccountId,IdentityUserId")] Customer customer, Account account)
         {
             if (id != customer.Id)
             {
@@ -109,6 +109,15 @@ namespace TrashCollector.Controllers
             {
                 try
                 {
+                    if(account.StartDay <= DateTime.Today && account.EndDay >= DateTime.Today)
+                    {
+                        account.IsSuspended = true;
+                    }
+                    else
+                    {
+                        account.IsSuspended = false;
+                    }
+                    _context.Update(account);
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }

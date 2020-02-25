@@ -25,7 +25,7 @@ namespace TrashCollector.Controllers
         {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 employee.IdentityUserId = userId;
-            var customersToPickup = _context.Customers.Where(c => c.Address.ZipCode == employee.Zipcode).Include(c => c.IdentityUser).Include(c => c.Address.StreetAddress).Include(c => c.FirstName).Include(c => c.LastName).Include(c => c.Account.PickupDay).Where(c => c.Account.PickupDay == DateTime.Today.DayOfWeek).Include(c => c.Account.OneTimePickup).Where(c => c.Account.OneTimePickup == DateTime.Today.DayOfWeek).Include(c => c.Account.History.IsPickedUp);
+            var customersToPickup = _context.Customers.Where(c => c.Account.IsSuspended == false).Where(c => c.Account.PickupDay == DateTime.Today.DayOfWeek).Where(c => c.Account.OneTimePickup == DateTime.Today.DayOfWeek).Where(c => c.Address.ZipCode == employee.Zipcode).Include(c => c.IdentityUser).Include(c => c.Address.StreetAddress).Include(c => c.FirstName).Include(c => c.LastName).Include(c => c.Account.PickupDay).Include(c => c.Account.OneTimePickup).Include(c => c.Account.History.IsPickedUp);
             return View(await customersToPickup.ToListAsync());
         }
 
